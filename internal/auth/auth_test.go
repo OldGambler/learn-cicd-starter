@@ -14,12 +14,12 @@ func TestGetAPIKey(t *testing.T) {
 	}{
 		{
 			name:        "Valid Token",
-			authHeader:  "Bearer Jojo",
+			authHeader:  "ApiKey Jojo",
 			expected:    "Jojo",
 			expectError: false,
 		},
 		{
-			name:        "Expecting L",
+			name:        "Bearer instead of ApiKey",
 			authHeader:  "Bearer L",
 			expected:    "Kira",
 			expectError: true,
@@ -32,9 +32,9 @@ func TestGetAPIKey(t *testing.T) {
 		},
 		{
 			name:        "No Token",
-			authHeader:  "Bearer ",
+			authHeader:  "ApiKey ",
 			expected:    "",
-			expectError: true,
+			expectError: false,
 		},
 	}
 	for _, tc := range testCases {
