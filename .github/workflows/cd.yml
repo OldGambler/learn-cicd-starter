@@ -9,6 +9,11 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    # Add permissions for the job
+    permissions:
+      contents: "read"
+      id-token: "write"
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -20,3 +25,14 @@ jobs:
 
       - name: Build app
         run: ./scripts/buildprod.sh
+
+      # Setup gcloud after buildprod runs
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          project_id: notely-459323
+
+      # Build and push Docker image
+      - name: "Build and push Docker image"
+        run: "gcloud builds submit --tag us-central1-docker.pkg.dev/notely-459323/notely-images/notely-app:latest ."
